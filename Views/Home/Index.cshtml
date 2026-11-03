@@ -1,0 +1,188 @@
+﻿@model BookStoreApp.ViewModels.HomeViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h1 class="text-center mb-4">Welcome to Book Store</h1>
+
+<hr />
+
+<!-- ADD BOOK FORM -->
+
+<h3>Add New Book</h3>
+
+<form method="post" action="/Home/AddBook" class="mb-4">
+
+    <div class="mb-3">
+        <label>Book Title</label>
+
+        <input type="text"
+               name="Title"
+               class="form-control"
+               placeholder="Enter book title"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Price</label>
+
+        <input type="number"
+               name="Price"
+               class="form-control"
+               step="0.01"
+               min="0"
+               placeholder="Enter price"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Select Author</label>
+
+        <select name="AuthorId" class="form-select" required>
+
+            <option value="">Select Author</option>
+
+            @foreach (var author in Model.Authors)
+            {
+                <option value="@author.Id">
+                    @author.Name
+                </option>
+            }
+
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Add Book
+    </button>
+
+</form>
+
+<hr />
+
+<!-- ADD AUTHOR FORM -->
+
+<h3>Add New Author</h3>
+
+<form method="post" action="/Home/AddAuthor" class="mb-4">
+
+    <div class="mb-3">
+        <label>Author Name</label>
+
+        <input type="text"
+               name="Name"
+               class="form-control"
+               placeholder="Enter author name"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Country</label>
+
+        <input type="text"
+               name="Country"
+               class="form-control"
+               placeholder="Enter country"
+               required />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Add Author
+    </button>
+
+</form>
+
+<hr />
+
+<!-- DISPLAY BOOKS -->
+
+<h3 class="mb-3">Available Books</h3>
+
+@if (Model.Books.Count == 0)
+{
+    <p class="alert alert-warning">
+        No books available.
+    </p>
+}
+else
+{
+    <div class="book-container">
+
+        @foreach (var book in Model.Books)
+        {
+            <div class="book-card">
+
+                <h4>@book.Title</h4>
+
+                <p>
+                    <strong>Author:</strong>
+                    @book.AuthorName
+                </p>
+
+                <p>
+                    <strong>Price:</strong>
+                    Rs. @book.Price
+                </p>
+
+                <form method="post"
+                      action="/Home/RemoveBook"
+                      onsubmit="return confirmRemove();">
+
+                    <input type="hidden"
+                           name="id"
+                           value="@book.Id" />
+
+                    <button type="submit"
+                            class="btn btn-danger btn-sm">
+
+                        Remove
+
+                    </button>
+
+                </form>
+
+            </div>
+        }
+
+    </div>
+}
+
+<!-- PAGE CSS -->
+@section Styles {
+    <style>
+
+        .book-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .book-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 10px;
+            width: 250px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .book-card h4 {
+            color: #0d6efd;
+        }
+
+    </style>
+}
+
+<!-- PAGE JAVASCRIPT -->
+@section Scripts {
+    <script>
+
+        function confirmRemove() {
+
+            return confirm("Remove this book?");
+
+        }
+
+    </script>
+}
